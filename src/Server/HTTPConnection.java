@@ -39,13 +39,7 @@ public class HTTPConnection{
             String request = new String(buffer.array(), 0, t);
             System.out.println("t: "+t);
             if(request == null) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("<html><head><title>Servidor WEB\n");
-                sb.append("</title><body bgcolor=\"#AACCFF\"<br>Linea Vacia</br>\n");
-                sb.append("</body></html>\n");
-                buffer = ByteBuffer.wrap(sb.toString().getBytes());
-                socket.write(buffer);
-                socket.close();
+                htmlResponse(200, "OK", "Empty line, Hello from HTTPServer");
                 return;
             }
             System.out.println("\nClient connected from: "+socket.socket().getInetAddress());
@@ -64,10 +58,8 @@ public class HTTPConnection{
                 } else { //HEAD OR GET WITHPUT PARAMS
                     getFileName(line);
                     boolean get = (line.toUpperCase().startsWith("GET"));
-                    if(fileName.compareTo("") == 0)
-                        sendFile("index.htm", get);
-                    else
-                        sendFile(fileName, get);
+                    if (fileName.compareTo("") == 0) sendFile("index.htm", get);
+                    else sendFile(fileName, get);
                 }
             } else if(line.toUpperCase().startsWith("GET")) { //GET WITH PARAMS
                 StringTokenizer tokens=new StringTokenizer(line,"?");
@@ -100,7 +92,7 @@ public class HTTPConnection{
         socket.write(buffer);
         socket.close();
     }
-    
+        
     private void delete() throws IOException{
         System.out.println("DELETE");
         File file = new File(fileName);
